@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asra Ghafoor — Bioinformatics Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060d14;
+    --bg2: #0b1622;
+    --bg3: #0f1f2e;
+    --surface: #112034;
+    --surface2: #172840;
+    --accent: #00e5c3;
+    --accent2: #0097ff;
+    --accent3: #7b61ff;
+    --warn: #ff6b6b;
+    --text: #e8f4f0;
+    --text2: #8ab3c4;
+    --text3: #4a7a8a;
+    --border: rgba(0,229,195,0.12);
+    --border2: rgba(0,229,195,0.25);
+    --glow: 0 0 30px rgba(0,229,195,0.15);
+    --glow2: 0 0 60px rgba(0,229,195,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+    height: 64px;
+    background: rgba(6,13,20,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--text2); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    text-decoration: none;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 80px clamp(1.5rem, 8vw, 8rem) 4rem;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,195,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  /* DNA strand decoration */
+  .dna-decoration {
+    position: absolute;
+    right: clamp(1rem, 8vw, 6rem);
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    padding: 6px 14px;
+    border: 1px solid var(--border2);
+    border-radius: 2px;
+    background: rgba(0,229,195,0.05);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero h1 .name-accent {
+    display: block;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 60%, var(--accent3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    color: var(--text2);
+    font-weight: 300;
+    margin-bottom: 2rem;
+    max-width: 520px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .stack-pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    background: rgba(255,255,255,0.02);
+    letter-spacing: 0.05em;
+  }
+
+  .stack-pill.hot {
+    border-color: rgba(0,229,195,0.3);
+    color: var(--accent);
+    background: rgba(0,229,195,0.05);
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background: #00ffda;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,229,195,0.3);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: transparent;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--border2);
+    border-radius: 2px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem clamp(1.5rem, 8vw, 8rem);
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 6rem clamp(1.5rem, 8vw, 8rem);
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .section-desc {
+    color: var(--text2);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 540px;
+    margin-bottom: 3rem;
+  }
+
+  /* ── PROJECT GRID ── */
+  .projects-filter {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .filter-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    padding: 6px 14px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    background: transparent;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  .filter-btn.active, .filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,195,0.06);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .project-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-4px);
+    box-shadow: var(--glow), 0 20px 40px rgba(0,0,0,0.3);
+  }
+
+  .project-card:hover::before { transform: scaleX(1); }
+
+  .project-card.featured {
+    grid-column: span 2;
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+  }
+
+  @media (max-width: 800px) {
+    .project-card.featured { grid-column: span 1; }
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .card-icon {
+    width: 40px; height: 40px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: rgba(0,229,195,0.08);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .card-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .badge-green { background: rgba(0,229,195,0.1); color: var(--accent); border: 1px solid rgba(0,229,195,0.2); }
+  .badge-blue { background: rgba(0,151,255,0.1); color: var(--accent2); border: 1px solid rgba(0,151,255,0.2); }
+  .badge-purple { background: rgba(123,97,255,0.1); color: var(--accent3); border: 1px solid rgba(123,97,255,0.2); }
+  .badge-red { background: rgba(255,107,107,0.1); color: var(--warn); border: 1px solid rgba(255,107,107,0.2); }
+  .badge-new { background: rgba(0,229,195,0.15); color: var(--accent); border: 1px solid var(--accent); animation: glow-badge 2s ease-in-out infinite; }
+
+  @keyframes glow-badge {
+    0%, 100% { box-shadow: 0 0 0 rgba(0,229,195,0); }
+    50% { box-shadow: 0 0 10px rgba(0,229,195,0.3); }
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+  }
+
+  .card-desc {
+    font-size: 0.875rem;
+    color: var(--text2);
+    font-weight: 300;
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+    flex: 1;
+  }
+
+  .card-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+  }
+
+  .tool-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 2px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .card-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+
+  .card-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.2s;
+  }
+
+  .card-link:hover { gap: 8px; }
+
+  /* ── SKILLS ── */
+  #skills { background: var(--bg2); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .skill-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .skill-group:hover { border-color: var(--border2); }
+
+  .skill-group-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .skill-group-title::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .skill-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .skill-item {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 2px;
+    color: var(--text2);
+    transition: all 0.2s;
+    font-weight: 300;
+  }
+
+  .skill-item:hover {
+    background: rgba(0,229,195,0.06);
+    border-color: rgba(0,229,195,0.2);
+    color: var(--accent);
+  }
+
+  .skill-item.core {
+    border-color: rgba(0,229,195,0.2);
+    color: var(--text);
+    background: rgba(0,229,195,0.04);
+  }
+
+  /* ── EXPERIENCE ── */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    opacity: 0.3;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .timeline-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.35rem; top: 6px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 10px rgba(0,229,195,0.4);
+  }
+
+  .timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .timeline-role {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .timeline-period {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .timeline-org {
+    font-size: 0.875rem;
+    color: var(--accent2);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+
+  .timeline-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .timeline-bullets li {
+    font-size: 0.875rem;
+    color: var(--text2);
+    font-weight: 300;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .timeline-bullets li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--bg2);
+    text-align: center;
+  }
+
+  .contact-wrapper {
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  .contact-email {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 4px;
+    margin: 1.5rem 0 2rem;
+    transition: border-color 0.2s;
+  }
+
+  .contact-email:hover { border-color: var(--accent); }
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text2);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  .social-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,195,0.05);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem clamp(1.5rem, 8vw, 8rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── SEQUENCE TICKER ── */
+  .seq-ticker {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    overflow: hidden;
+    height: 32px;
+    display: flex;
+    align-items: center;
+  }
+
+  .seq-inner {
+    display: flex;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+    gap: 3rem;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .seq-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    opacity: 0.25;
+  }
+
+  .seq-text .A { color: #00e5c3; }
+  .seq-text .T { color: #0097ff; }
+  .seq-text .G { color: #7b61ff; }
+  .seq-text .C { color: #ff6b6b; }
+
+  /* ── OPEN TO WORK BANNER ── */
+  .otw-banner {
+    background: linear-gradient(135deg, rgba(0,229,195,0.08), rgba(0,151,255,0.05));
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 2rem;
+    animation: fadeUp 0.6s 0.5s ease both;
+    max-width: 480px;
+  }
+
+  .otw-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #2ecc71;
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(46,204,113,0.5);
+  }
+
+  .otw-text {
+    font-size: 0.85rem;
+    color: var(--text2);
+  }
+
+  .otw-text strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ── MARKET LABEL ── */
+  .market-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: #ff9f43;
+    background: rgba(255,159,67,0.08);
+    border: 1px solid rgba(255,159,67,0.2);
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">AG<span>://</span>bioinfo</a>
+  <ul class="nav-links">
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <!-- DNA decoration -->
+  <svg class="dna-decoration" width="120" height="400" viewBox="0 0 120 400">
+    <defs>
+      <linearGradient id="dnaGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#00e5c3" stop-opacity="0"/>
+        <stop offset="30%" stop-color="#00e5c3" stop-opacity="1"/>
+        <stop offset="70%" stop-color="#0097ff" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#0097ff" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <g stroke="url(#dnaGrad)" stroke-width="1.5" fill="none">
+      <path d="M20,0 Q60,20 100,40 Q60,60 20,80 Q60,100 100,120 Q60,140 20,160 Q60,180 100,200 Q60,220 20,240 Q60,260 100,280 Q60,300 20,320 Q60,340 100,360 Q60,380 20,400"/>
+      <path d="M100,0 Q60,20 20,40 Q60,60 100,80 Q60,100 20,120 Q60,140 100,160 Q60,180 20,200 Q60,220 100,240 Q60,260 20,280 Q60,300 100,320 Q60,340 20,360 Q60,380 100,400"/>
+      <!-- rungs -->
+      <line x1="20" y1="40" x2="100" y2="40" stroke-width="1" opacity="0.5"/>
+      <line x1="20" y1="80" x2="100" y2="80" stroke-width="1" opacity="0.5"/>
+      <line x1="100" y1="120" x2="20" y2="120" stroke-width="1" opacity="0.5"/>
+      <line x1="100" y1="160" x2="20" y2="160" stroke-width="1" opacity="0.5"/>
+      <line x1="20" y1="200" x2="100" y2="200" stroke-width="1" opacity="0.5"/>
+      <line x1="20" y1="240" x2="100" y2="240" stroke-width="1" opacity="0.5"/>
+      <line x1="100" y1="280" x2="20" y2="280" stroke-width="1" opacity="0.5"/>
+      <line x1="100" y1="320" x2="20" y2="320" stroke-width="1" opacity="0.5"/>
+      <line x1="20" y1="360" x2="100" y2="360" stroke-width="1" opacity="0.5"/>
+    </g>
+    <circle cx="20" cy="40" r="3" fill="#00e5c3" opacity="0.7"/>
+    <circle cx="100" cy="40" r="3" fill="#ff6b6b" opacity="0.7"/>
+    <circle cx="20" cy="80" r="3" fill="#0097ff" opacity="0.7"/>
+    <circle cx="100" cy="80" r="3" fill="#7b61ff" opacity="0.7"/>
+    <circle cx="100" cy="120" r="3" fill="#00e5c3" opacity="0.7"/>
+    <circle cx="20" cy="120" r="3" fill="#ff6b6b" opacity="0.7"/>
+    <circle cx="100" cy="160" r="3" fill="#0097ff" opacity="0.7"/>
+    <circle cx="20" cy="160" r="3" fill="#7b61ff" opacity="0.7"/>
+    <circle cx="20" cy="200" r="3" fill="#00e5c3" opacity="0.7"/>
+    <circle cx="100" cy="200" r="3" fill="#ff6b6b" opacity="0.7"/>
+    <circle cx="20" cy="240" r="3" fill="#0097ff" opacity="0.7"/>
+    <circle cx="100" cy="240" r="3" fill="#7b61ff" opacity="0.7"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-tag">Available for hire · Junior Bioinformatician</div>
+    <h1>
+      Asra
+      <span class="name-accent">Ghafoor</span>
+    </h1>
+    <p class="hero-subtitle">MSc Bioinformatician · PharmD · Building reproducible genomics pipelines where computational biology meets drug discovery</p>
+
+    <div class="hero-stack">
+      <span class="stack-pill hot">Python</span>
+      <span class="stack-pill hot">RNA-seq</span>
+      <span class="stack-pill hot">Nextflow</span>
+      <span class="stack-pill">BLAST</span>
+      <span class="stack-pill">Phylogenetics</span>
+      <span class="stack-pill">Multi-Omics</span>
+      <span class="stack-pill">Drug Discovery</span>
+      <span class="stack-pill">MEGA</span>
+      <span class="stack-pill">InterProScan</span>
+      <span class="stack-pill">SPSS</span>
+    </div>
+
+    <div class="hero-ctas">
+      <a href="#projects" class="btn-primary">View Projects →</a>
+      <a href="#contact" class="btn-ghost">Get In Touch</a>
+    </div>
+
+    <div class="otw-banner">
+      <div class="otw-dot"></div>
+      <p class="otw-text"><strong>Open to opportunities</strong> — Junior Bioinformatician roles in pharma &amp; biotech · UK-based · Remote considered</p>
+    </div>
+  </div>
+</section>
+
+<!-- SEQUENCE TICKER -->
+<div class="seq-ticker">
+  <div class="seq-inner">
+    <span class="seq-text"><span class="A">A</span><span class="T">T</span><span class="G">G</span><span class="C">C</span><span class="A">A</span><span class="T">T</span><span class="G">G</span><span class="C">C</span><span class="A">A</span><span class="C">C</span><span class="G">G</span><span class="T">T</span> · RNA-SEQ · DIFFERENTIAL EXPRESSION · <span class="A">A</span><span class="G">G</span><span class="C">C</span><span class="T">T</span><span class="A">A</span><span class="G">G</span><span class="C">C</span><span class="T">T</span> · PHYLOGENETICS · PATHWAY ANALYSIS · <span class="C">C</span><span class="G">G</span><span class="A">A</span><span class="T">T</span><span class="C">C</span><span class="G">G</span><span class="A">A</span><span class="T">T</span> · DRUG DISCOVERY · MULTI-OMICS · <span class="A">A</span><span class="T">T</span><span class="G">G</span><span class="C">C</span><span class="A">A</span><span class="T">T</span><span class="G">G</span></span>
+    <span class="seq-text"><span class="A">A</span><span class="T">T</span><span class="G">G</span><span class="C">C</span><span class="A">A</span><span class="T">T</span><span class="G">G</span><span class="C">C</span><span class="A">A</span><span class="C">C</span><span class="G">G</span><span class="T">T</span> · RNA-SEQ · DIFFERENTIAL EXPRESSION · <span class="A">A</span><span class="G">G</span><span class="C">C</span><span class="T">T</span><span class="A">A</span><span class="G">G</span><span class="C">C</span><span class="T">T</span> · PHYLOGENETICS · PATHWAY ANALYSIS · <span class="C">C</span><span class="G">G</span><span class="A">A</span><span class="T">T</span><span class="C">C</span><span class="G">G</span><span class="A">A</span><span class="T">T</span> · DRUG DISCOVERY · MULTI-OMICS · <span class="A">A</span><span class="T">T</span><span class="G">G</span><span class="C">C</span><span class="A">A</span><span class="T">T</span><span class="G">G</span></span>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-number">8</span>
+    <span class="stat-label">Research Projects</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">3</span>
+    <span class="stat-label">Omics Domains</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">20+</span>
+    <span class="stat-label">Tools & Pipelines</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">2</span>
+    <span class="stat-label">Degrees</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">5+</span>
+    <span class="stat-label">Years in Science</span>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Research Portfolio</div>
+  <h2 class="section-title">Projects & Research</h2>
+  <p class="section-desc">A combination of completed research projects and market-targeted builds designed to align with current pharma/biotech hiring demand.</p>
+
+  <div class="projects-filter">
+    <button class="filter-btn active" onclick="filterProjects('all', this)">All</button>
+    <button class="filter-btn" onclick="filterProjects('genomics', this)">Genomics</button>
+    <button class="filter-btn" onclick="filterProjects('virology', this)">Virology</button>
+    <button class="filter-btn" onclick="filterProjects('clinical', this)">Clinical</button>
+    <button class="filter-btn" onclick="filterProjects('formulation', this)">Formulation</button>
+    <button class="filter-btn" onclick="filterProjects('market', this)">🔥 Market-Ready</button>
+  </div>
+
+  <div class="projects-grid" id="projectsGrid">
+
+    <!-- FEATURED: RNA-seq -->
+    <div class="project-card featured reveal" data-tags="genomics">
+      <div class="card-header">
+        <div class="card-icon">🧬</div>
+        <div class="card-badges">
+          <span class="badge badge-green">Completed</span>
+          <span class="badge badge-blue">Oncology</span>
+        </div>
+      </div>
+      <div class="card-title">Transcriptional Response to PARP Inhibitor Olaparib in Ovarian Cancer Cell Lines</div>
+      <div class="card-desc">Built a fully reproducible RNA-seq differential gene expression pipeline to characterise transcriptional changes in BRCA1-deficient vs wild-type ovarian cancer cells. Identified pathway-level differences underpinning Olaparib drug sensitivity through GO and pathway enrichment analysis — contributing directly to cancer pharmacology research at Teesside University.</div>
+      <div class="card-tools">
+        <span class="tool-tag">Python</span>
+        <span class="tool-tag">Nextflow</span>
+        <span class="tool-tag">DESeq2</span>
+        <span class="tool-tag">RNA-seq</span>
+        <span class="tool-tag">GSEA</span>
+        <span class="tool-tag">Gene Ontology</span>
+        <span class="tool-tag">ggplot2</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">Teesside University · 2024–2025</span>
+        <span class="card-link">View Details →</span>
+      </div>
+    </div>
+
+    <!-- Virus Dissertation -->
+    <div class="project-card reveal" data-tags="virology">
+      <div class="card-header">
+        <div class="card-icon">🦠</div>
+        <div class="card-badges">
+          <span class="badge badge-purple">MSc Dissertation</span>
+        </div>
+      </div>
+      <div class="card-title">Genetic Characterisation of a Novel Picorna-like Virus from <em>Trachelas tranquillus</em></div>
+      <div class="card-desc">Full genetic characterisation of a previously undescribed picorna-like RNA virus from the spider species <em>Trachelas tranquillus</em>. Performed sequence homology searches, domain annotation, and constructed a maximum-likelihood phylogenetic tree to establish evolutionary position within Picornavirales.</div>
+      <div class="card-tools">
+        <span class="tool-tag">NCBI BLAST</span>
+        <span class="tool-tag">ExPASy</span>
+        <span class="tool-tag">InterProScan</span>
+        <span class="tool-tag">MEGA</span>
+        <span class="tool-tag">Homogeneity Analysis</span>
+        <span class="tool-tag">Phylogenetics</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">Teesside University · 2023</span>
+        <span class="card-link">View Details →</span>
+      </div>
+    </div>
+
+    <!-- Blood Groups -->
+    <div class="project-card reveal" data-tags="clinical">
+      <div class="card-header">
+        <div class="card-icon">🩸</div>
+        <div class="card-badges">
+          <span class="badge badge-green">Completed</span>
+        </div>
+      </div>
+      <div class="card-title">Prevalence of ABO & Rh Blood Groups Among University Students</div>
+      <div class="card-desc">Cross-sectional epidemiological study investigating ABO and Rh blood group phenotype distribution across a university cohort. Applied descriptive and inferential statistics to calculate allele frequencies, demographic subgroup distributions, and population-level prevalence patterns.</div>
+      <div class="card-tools">
+        <span class="tool-tag">IBM SPSS</span>
+        <span class="tool-tag">Descriptive Statistics</span>
+        <span class="tool-tag">Epidemiology</span>
+        <span class="tool-tag">Population Genetics</span>
+        <span class="tool-tag">Study Design</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">University of Central Punjab · PharmD</span>
+        <span class="card-link">View Details →</span>
+      </div>
+    </div>
+
+    <!-- Allopurinol -->
+    <div class="project-card reveal" data-tags="clinical">
+      <div class="card-header">
+        <div class="card-icon">💊</div>
+        <div class="card-badges">
+          <span class="badge badge-blue">Clinical Pharma</span>
+        </div>
+      </div>
+      <div class="card-title">Medication Compliance of Allopurinol in Comorbid Gout-Hypertension Patients</div>
+      <div class="card-desc">Assessed real-world medication adherence patterns in gout patients with comorbid hypertension. Designed structured clinical questionnaires, analysed polypharmacy variables, and identified demographic predictors of non-adherence relevant to drug mechanism and patient stratification in computational pipelines.</div>
+      <div class="card-tools">
+        <span class="tool-tag">IBM SPSS</span>
+        <span class="tool-tag">Clinical Pharmacology</span>
+        <span class="tool-tag">Real-World Evidence</span>
+        <span class="tool-tag">Patient Stratification</span>
+        <span class="tool-tag">Questionnaire Design</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">University of Central Punjab · PharmD</span>
+        <span class="card-link">View Details →</span>
+      </div>
+    </div>
+
+    <!-- Anti-Ageing Cream -->
+    <div class="project-card reveal" data-tags="formulation">
+      <div class="card-header">
+        <div class="card-icon">🌿</div>
+        <div class="card-badges">
+          <span class="badge badge-green">In Vitro Study</span>
+        </div>
+      </div>
+      <div class="card-title">Development & In Vitro Characterisation of Anti-Ageing Cream from <em>Senna</em> Leaf Extract</div>
+      <div class="card-desc">Extracted and phytochemically characterised bioactive antioxidant compounds from <em>Senna</em> leaves. Formulated a topical cream and conducted full in vitro physicochemical characterisation — pH, viscosity, spreadability, DPPH radical scavenging — linking experimental data to oxidative stress mechanisms relevant to dermatology drug discovery.</div>
+      <div class="card-tools">
+        <span class="tool-tag">Phytochemistry</span>
+        <span class="tool-tag">DPPH Assay</span>
+        <span class="tool-tag">Drug Formulation</span>
+        <span class="tool-tag">In Vitro Characterisation</span>
+        <span class="tool-tag">Natural Products</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">University of Central Punjab · PharmD</span>
+        <span class="card-link">View Details →</span>
+      </div>
+    </div>
+
+    <!-- MARKET: scRNA-seq -->
+    <div class="project-card reveal" data-tags="genomics market">
+      <div class="card-header">
+        <div class="card-icon">🔬</div>
+        <div class="card-badges">
+          <span class="badge badge-new">🔥 High Demand</span>
+          <span class="badge badge-purple">In Progress</span>
+        </div>
+      </div>
+      <div class="card-title">Single-Cell RNA-seq Analysis of Tumour Microenvironment Cell Populations</div>
+      <div class="card-desc">Applying scRNA-seq analysis to characterise immune and stromal cell heterogeneity within tumour microenvironments using PBMC datasets. Implementing clustering, UMAP dimensionality reduction, and cell-type annotation pipelines — one of the most in-demand skills across pharma and biotech in 2025.</div>
+      <div class="card-tools">
+        <span class="tool-tag">Python</span>
+        <span class="tool-tag">Scanpy</span>
+        <span class="tool-tag">Seurat</span>
+        <span class="tool-tag">UMAP</span>
+        <span class="tool-tag">scRNA-seq</span>
+        <span class="tool-tag">Leiden Clustering</span>
+        <span class="tool-tag">R</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">Independent · 2025</span>
+        <span class="card-link">View on GitHub →</span>
+      </div>
+    </div>
+
+    <!-- MARKET: AlphaFold -->
+    <div class="project-card reveal" data-tags="market">
+      <div class="card-header">
+        <div class="card-icon">🧪</div>
+        <div class="card-badges">
+          <span class="badge badge-new">🔥 High Demand</span>
+          <span class="badge badge-blue">Structural Bio</span>
+        </div>
+      </div>
+      <div class="card-title">Drug Target Identification via AlphaFold2 Protein Structure Prediction</div>
+      <div class="card-desc">Using AlphaFold2 predictions to identify and evaluate novel drug binding pockets in proteins of pharmacological interest. Integrating predicted structures with molecular docking workflows to prioritise targets — directly relevant to structure-based drug discovery pipelines in pharma industry roles.</div>
+      <div class="card-tools">
+        <span class="tool-tag">AlphaFold2</span>
+        <span class="tool-tag">PyMOL</span>
+        <span class="tool-tag">AutoDock Vina</span>
+        <span class="tool-tag">Python</span>
+        <span class="tool-tag">Molecular Docking</span>
+        <span class="tool-tag">UniProt</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">Independent · 2025</span>
+        <span class="card-link">View on GitHub →</span>
+      </div>
+    </div>
+
+    <!-- MARKET: Cancer Mutation Signatures -->
+    <div class="project-card reveal" data-tags="genomics market">
+      <div class="card-header">
+        <div class="card-icon">📊</div>
+        <div class="card-badges">
+          <span class="badge badge-new">🔥 High Demand</span>
+          <span class="badge badge-red">TCGA Data</span>
+        </div>
+      </div>
+      <div class="card-title">Somatic Mutation Signature Analysis in Cancer Using TCGA Data</div>
+      <div class="card-desc">Extracting and characterising somatic mutation signatures from TCGA cancer genomics datasets using SigProfiler. Linking mutational patterns to known COSMIC signatures to identify DNA damage repair mechanisms — directly applicable to oncology drug development and companion diagnostic research.</div>
+      <div class="card-tools">
+        <span class="tool-tag">Python</span>
+        <span class="tool-tag">SigProfiler</span>
+        <span class="tool-tag">TCGA</span>
+        <span class="tool-tag">COSMIC Signatures</span>
+        <span class="tool-tag">MAF Files</span>
+        <span class="tool-tag">maftools</span>
+        <span class="tool-tag">R</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">Independent · 2025</span>
+        <span class="card-link">View on GitHub →</span>
+      </div>
+    </div>
+
+    <!-- MARKET: Drug Repurposing -->
+    <div class="project-card featured reveal" data-tags="market">
+      <div class="card-header">
+        <div class="card-icon">💡</div>
+        <div class="card-badges">
+          <span class="badge badge-new">🔥 High Demand</span>
+          <span class="badge badge-purple">Network Pharmacology</span>
+        </div>
+      </div>
+      <div class="card-title">Network Pharmacology-Based Drug Repurposing Pipeline for Inflammatory Disease Targets</div>
+      <div class="card-desc">Developing an end-to-end computational drug repurposing pipeline leveraging protein-protein interaction networks, target enrichment, and compound-target binding prediction. Integrates ChEMBL bioactivity data, STRING network analysis, and GO pathway mapping to identify approved drugs with repurposing potential in inflammatory disease — a high-growth area in pharma AI/ML pipelines and one of the most sought-after computational skills in biotech hiring.</div>
+      <div class="card-tools">
+        <span class="tool-tag">Python</span>
+        <span class="tool-tag">ChEMBL API</span>
+        <span class="tool-tag">STRING DB</span>
+        <span class="tool-tag">NetworkX</span>
+        <span class="tool-tag">Cytoscape</span>
+        <span class="tool-tag">RDKit</span>
+        <span class="tool-tag">Pathway Analysis</span>
+        <span class="tool-tag">Drug Repurposing</span>
+      </div>
+      <div class="card-footer">
+        <span class="card-meta">Independent · 2025</span>
+        <span class="card-link">View on GitHub →</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">Technical Competencies</div>
+  <h2 class="section-title">Skills & Tools</h2>
+  <p class="section-desc">Spanning computational genomics, structural biology, statistical analysis, and pharmaceutical sciences.</p>
+
+  <div class="skills-grid">
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Pipeline & Languages</div>
+      <div class="skill-items">
+        <span class="skill-item core">Python</span>
+        <span class="skill-item core">Nextflow</span>
+        <span class="skill-item core">R</span>
+        <span class="skill-item">Bash / Linux</span>
+        <span class="skill-item">Git</span>
+        <span class="skill-item">Jupyter</span>
+      </div>
+    </div>
+
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Genomics & Transcriptomics</div>
+      <div class="skill-items">
+        <span class="skill-item core">RNA-seq</span>
+        <span class="skill-item core">Differential Gene Expression</span>
+        <span class="skill-item">scRNA-seq</span>
+        <span class="skill-item">DESeq2</span>
+        <span class="skill-item">GSEA</span>
+        <span class="skill-item">NGS</span>
+        <span class="skill-item">TCGA Data</span>
+      </div>
+    </div>
+
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Sequence & Structural Analysis</div>
+      <div class="skill-items">
+        <span class="skill-item core">NCBI BLAST</span>
+        <span class="skill-item core">InterProScan</span>
+        <span class="skill-item core">ExPASy</span>
+        <span class="skill-item">AlphaFold2</span>
+        <span class="skill-item">PyMOL</span>
+        <span class="skill-item">Molecular Docking</span>
+        <span class="skill-item">UniProt</span>
+      </div>
+    </div>
+
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Phylogenetics & Evolution</div>
+      <div class="skill-items">
+        <span class="skill-item core">MEGA</span>
+        <span class="skill-item core">Phylogenetic Analysis</span>
+        <span class="skill-item">Homogeneity Analysis</span>
+        <span class="skill-item">Sequence Alignment</span>
+        <span class="skill-item">Viral Genomics</span>
+      </div>
+    </div>
+
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Drug Discovery & Cheminformatics</div>
+      <div class="skill-items">
+        <span class="skill-item core">Drug Discovery</span>
+        <span class="skill-item">ChEMBL</span>
+        <span class="skill-item">RDKit</span>
+        <span class="skill-item">Drug Repurposing</span>
+        <span class="skill-item">Network Pharmacology</span>
+        <span class="skill-item">Target ID</span>
+      </div>
+    </div>
+
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Statistics & Clinical</div>
+      <div class="skill-items">
+        <span class="skill-item core">IBM SPSS</span>
+        <span class="skill-item">Pathway Enrichment</span>
+        <span class="skill-item">Epidemiology</span>
+        <span class="skill-item">Clinical Pharmacology</span>
+        <span class="skill-item">Real-World Evidence</span>
+        <span class="skill-item">Study Design</span>
+      </div>
+    </div>
+
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Proteomics & Multi-Omics</div>
+      <div class="skill-items">
+        <span class="skill-item core">Proteomics</span>
+        <span class="skill-item core">Multi-Omics</span>
+        <span class="skill-item">Computational Genomics</span>
+        <span class="skill-item">Protein Domain Analysis</span>
+        <span class="skill-item">Gene Ontology</span>
+      </div>
+    </div>
+
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Pharmaceutical Sciences</div>
+      <div class="skill-items">
+        <span class="skill-item core">Drug Formulation</span>
+        <span class="skill-item">In Vitro Assays</span>
+        <span class="skill-item">Phytochemistry</span>
+        <span class="skill-item">DPPH Assay</span>
+        <span class="skill-item">Pharmacology</span>
+        <span class="skill-item">Natural Products</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">Career History</div>
+  <h2 class="section-title">Experience & Education</h2>
+  <p class="section-desc">From pharmacy to bioinformatics — a uniquely cross-disciplinary background built for drug discovery.</p>
+
+  <div class="timeline">
+
+    <div class="timeline-item reveal">
+      <div class="timeline-header">
+        <div class="timeline-role">Placement Intern — Bioinformatics</div>
+        <div class="timeline-period">Sept 2024 – Feb 2025</div>
+      </div>
+      <div class="timeline-org">Teesside University · Middlesbrough, UK</div>
+      <ul class="timeline-bullets">
+        <li>Built a reproducible RNA-seq differential gene expression pipeline in Python and Nextflow, enabling systematic transcriptional profiling of PARP inhibitor responses in ovarian cancer cell lines.</li>
+        <li>Identified statistically significant pathway differences between BRCA1-deficient and wild-type cells through GO and pathway enrichment analysis, directly contributing to mechanistic understanding of Olaparib drug sensitivity.</li>
+        <li>Delivered multi-omics findings through publication-quality visualisations, communicating complex computational results clearly to biological research stakeholders.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-header">
+        <div class="timeline-role">MSc Bioinformatics</div>
+        <div class="timeline-period">Sept 2023</div>
+      </div>
+      <div class="timeline-org">Teesside University</div>
+      <ul class="timeline-bullets">
+        <li>Dissertation: Genetic Characterisation of a Novel Picorna-like Virus from <em>Trachelas tranquillus</em> — using BLAST, ExPASy, InterProScan, and MEGA phylogenetic analysis.</li>
+        <li>Trained in bioinformatics pipeline development, multi-omics data analysis, and computational approaches to genomics and drug discovery.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-header">
+        <div class="timeline-role">Founder & Pharmacist</div>
+        <div class="timeline-period">Sept 2019 – Aug 2023</div>
+      </div>
+      <div class="timeline-org">Physio Pharmacy · Lahore, Pakistan</div>
+      <ul class="timeline-bullets">
+        <li>Founded and scaled a community pharmacy, managing clinical operations, regulatory compliance, and team leadership over four years — demonstrating full project ownership in a complex operational environment.</li>
+        <li>Applied data-informed approaches to monitor prescription trends and medication adherence, building practical experience in analysing health datasets.</li>
+        <li>Delivered clinical pharmacotherapy consultations, deepening pharmacological domain expertise now applied directly to computational drug mechanism research.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-header">
+        <div class="timeline-role">Product Development Scientist</div>
+        <div class="timeline-period">Apr 2018 – Jul 2019</div>
+      </div>
+      <div class="timeline-org">Remington Pharma · Lahore, Pakistan</div>
+      <ul class="timeline-bullets">
+        <li>Applied pharmacokinetic and physicochemical principles to optimise drug formulation stability and bioavailability within a commercial pharma R&D pipeline.</li>
+        <li>Analysed compound bioactivity and experimental datasets to support evidence-based formulation decisions — developing early competency in biochemical data interpretation for drug development.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-header">
+        <div class="timeline-role">Doctor of Pharmacy (Pharm.D.)</div>
+        <div class="timeline-period">2012 – 2017</div>
+      </div>
+      <div class="timeline-org">University of Central Punjab · Lahore</div>
+      <ul class="timeline-bullets">
+        <li>Completed three independent research projects spanning population genetics, clinical pharmacology, and pharmaceutical formulation science.</li>
+        <li>President, Character Building Society — led student leadership and community engagement initiatives across the university.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-wrapper">
+    <div class="section-label" style="justify-content:center">Get In Touch</div>
+    <h2 class="section-title">Open to Opportunities</h2>
+    <p class="section-desc" style="margin:0 auto 0; text-align:center">Junior Bioinformatician roles in pharma or biotech. UK-based, remote considered. Let's talk.</p>
+    <a href="mailto:asra.ghafoor16@gmail.com" class="contact-email">asra.ghafoor16@gmail.com</a>
+    <div class="social-links">
+      <a href="https://www.linkedin.com/in/asra-ghafoorb09394b1" class="social-link" target="_blank">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="#" class="social-link">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="#" class="social-link">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Download CV
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-copy">© 2025 Asra Ghafoor · Bioinformatics Portfolio</span>
+  <span class="footer-copy" style="color:var(--accent);opacity:0.6">MSc Bioinformatics · PharmD · Teesside University</span>
+</footer>
+
+<script>
+  // Intersection observer for reveal animations
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Project filter
+  function filterProjects(tag, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach(card => {
+      const tags = card.getAttribute('data-tags') || '';
+      if (tag === 'all' || tags.includes(tag)) {
+        card.style.display = 'flex';
+        card.style.animation = 'fadeUp 0.4s ease both';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    sections.forEach(section => {
+      const top = section.offsetTop - 100;
+      const bottom = top + section.offsetHeight;
+      const id = section.getAttribute('id');
+      const link = document.querySelector(`.nav-links a[href="#${id}"]`);
+      if (link) {
+        if (scrollY >= top && scrollY < bottom) {
+          link.style.color = 'var(--accent)';
+        } else {
+          link.style.color = '';
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>
